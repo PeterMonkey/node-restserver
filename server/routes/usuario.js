@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const Ususario = require('../models/usuario')
 
 
 
@@ -11,20 +12,29 @@ app.get('/usuario', (req, res) => {
   app.post('/usuario', (req, res) => {
   
       let body = req.body;
-  
-      if(body.nommre === undefined) {
-  
-        res.status(400).json({   // Esta funcion retorna el codigo de respuesta
-  
-              OK: false,
-              mensaje: 'El nombre es necesario'
-        });
-            
-      }else {
+
+      let usuario = new Ususario({ //Crea al usuario
+        nombre: body.nombre,
+        email: body.email,
+        password: body.password,
+        role: body.role
+      })
+
+
+      usuario.save( (err, usuarioDB) => {  //Guarda al usuario en la BD
+        if(err){
+          return res.status(400).json({
+            ok: false,
+            err
+          })
+        }
+
         res.json({
-          persona: body
-       })
-      }
+          ok: true,
+          usuario: usuarioDB
+        })
+      })
+
   
       
     })
