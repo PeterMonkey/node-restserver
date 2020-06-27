@@ -1,5 +1,6 @@
 const express = require('express')
 const bcrypt = require('bcrypt');
+const _ = require('underscore');
 
 const app = express()
 const Ususario = require('../models/usuario')
@@ -47,10 +48,26 @@ app.get('/usuario', (req, res) => {
   app.put('/usuario/:id', (req, res) => {
   
       let id = req.params.id; //Retorne lo que sea que coloque en el url
-  
-      res.json({
-          id
+      let body = _.pick( req.body, ['nombre', 'email', 'img', 'role', 'estado'] ); //Regresa una copia del objeto filtrando solo los valores que yo quiero
+
+
+      Ususario.findByIdAndUpdate( id, body, {new: true, runValidators: true}, (err, usuarioDB) => {
+        
+        if(err){
+          return res.status(400).json({
+            ok: false,
+            err
+          });
+        }
+
+         res.json({ 
+            ok: true,
+            usuario: usuarioDB
+          })
+
       })
+  
+      
   })
   
   app.delete('/usuario', (req, res) => {
