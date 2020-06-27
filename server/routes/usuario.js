@@ -3,12 +3,48 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const app = express()
-const Ususario = require('../models/usuario')
+const Ususario = require('../models/usuario');
+const usuario = require('../models/usuario');
 
 
 
 app.get('/usuario', (req, res) => {
-    res.json('get usuario LOCAL!!!')
+    
+   let desde = req.query.desde || 0; // Si no especifica desde donde comienza, lo haces desde 0
+   desde = Number(desde); 
+
+   let limite =req.query.limite || 5; // Si no especifica el numero de registro, llega hasta 5
+   limite =Number(limite);
+
+  Ususario.find({}, 'nombre email role state google img') // Filtrando los resultados
+     .skip(desde) //Salta a los siguentes registros
+     .limit(limite) //Manda solo un numero de registros
+
+     .exec( (err, usuarios ) => {
+
+      if(err){
+        return res.status(400).json({
+          ok: false,
+          err
+        })
+      }
+
+      usuario.count({}, (err, conteo) => {
+
+
+        res.json({
+          pk: true,
+          usuarios,
+          cuantos: conteo
+        });
+  
+
+      });
+
+      
+     });
+
+
   })
   
   //El post se usa para crear nuevos registros
