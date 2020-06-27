@@ -41,6 +41,15 @@ let usuarioSchema = new Schema({
     }
 });
 
+usuarioSchema.methods.toJSON = function() { // se usa 'function' y no '=>', por que se utiliza el this
+    let user = this; //lo que sea que tenga en ese momento
+    let userObject = user.toObject(); //toma el objeto del usuario
+
+    delete userObject.password;
+
+    return userObject;
+}
+
 usuarioSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser unico'}) // Se le dice que use es plugin
 
 module.exports = mongoose.model('Usuario', usuarioSchema);

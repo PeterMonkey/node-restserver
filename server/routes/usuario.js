@@ -1,4 +1,6 @@
 const express = require('express')
+const bcrypt = require('bcrypt');
+
 const app = express()
 const Ususario = require('../models/usuario')
 
@@ -16,7 +18,7 @@ app.get('/usuario', (req, res) => {
       let usuario = new Ususario({ //Crea al usuario
         nombre: body.nombre,
         email: body.email,
-        password: body.password,
+        password: bcrypt.hashSync( body.password, 10), //hashSync es para que haga el hash de forma sincrona
         role: body.role
       })
 
@@ -28,6 +30,8 @@ app.get('/usuario', (req, res) => {
             err
           })
         }
+
+        // usuarioDB.password = null; //no mostrar el hash
 
         res.json({
           ok: true,
