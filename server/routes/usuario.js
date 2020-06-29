@@ -106,8 +106,36 @@ app.get('/usuario', (req, res) => {
       
   })
   
-  app.delete('/usuario', (req, res) => {
-      res.json('delete usuario')
+  app.delete('/usuario/:id', (req, res) => {
+
+          let id = req.params.id;
+     
+           //Eliminando fisicamente: que deje de existir el registro
+            Ususario.findByIdAndRemove(id, (err, userDel) => {
+
+              if(err){
+                return res.status(400).json({
+                  ok: false,
+                  err
+                });
+              }
+
+              if(!userDel){
+                return res.status(400).json({
+                  ok: false,
+                  err: {
+                    message: 'Usuario no encontrado'
+                  }
+                });
+              }
+
+              res.json({
+                ok: true,
+                usuario: userDel
+              })
+          })
+
+      
     })
 
 module.exports = app;    
