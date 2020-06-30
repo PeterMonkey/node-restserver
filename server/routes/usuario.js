@@ -16,10 +16,10 @@ app.get('/usuario', (req, res) => {
    let limite =req.query.limite || 5; // Si no especifica el numero de registro, llega hasta 5
    limite =Number(limite);
 
-  Ususario.find({}, 'nombre email role state google img') // Filtrando los resultados
+  Ususario.find({state: true}, 'nombre email role state google img') // Filtrando los resultados
      .skip(desde) //Salta a los siguentes registros
      .limit(limite) //Manda solo un numero de registros
-
+     
      .exec( (err, usuarios ) => {
 
       if(err){
@@ -29,7 +29,7 @@ app.get('/usuario', (req, res) => {
         })
       }
 
-      usuario.count({}, (err, conteo) => {
+      usuario.count({state: true}, (err, conteo) => {
 
 
         res.json({
@@ -40,6 +40,8 @@ app.get('/usuario', (req, res) => {
   
 
       });
+
+    
 
       
      });
@@ -109,18 +111,20 @@ app.get('/usuario', (req, res) => {
   app.delete('/usuario/:id', (req, res) => {
 
           let id = req.params.id;
-     
-           //Eliminando fisicamente: que deje de existir el registro
-            Ususario.findByIdAndRemove(id, (err, userDel) => {
+          let changeState = {
+            state: false
+          }
 
-              if(err){
-                return res.status(400).json({
-                  ok: false,
-                  err
-                });
-              }
+          Ususario.findByIdAndUpdate(id, changeState, {new: true}, (err, userDel) => {
+            
+            if(err){
+                    return res.status(400).json({
+                      ok: false,
+                      err
+                    });
+                  }
 
-              if(!userDel){
+            if({state: false}){
                 return res.status(400).json({
                   ok: false,
                   err: {
@@ -133,7 +137,33 @@ app.get('/usuario', (req, res) => {
                 ok: true,
                 usuario: userDel
               })
+          
           })
+     
+           //Eliminando fisicamente: que deje de existir el registro
+          //   Ususario.findByIdAndRemove(id, (err, userDel) => {
+
+          //     if(err){
+          //       return res.status(400).json({
+          //         ok: false,
+          //         err
+          //       });
+          //     }
+
+          //     if(!userDel){
+          //       return res.status(400).json({
+          //         ok: false,
+          //         err: {
+          //           message: 'Usuario no encontrado'
+          //         }
+          //       });
+          //     }
+
+          //     res.json({
+          //       ok: true,
+          //       usuario: userDel
+          //     })
+          // })
 
       
     })
