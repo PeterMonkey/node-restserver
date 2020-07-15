@@ -3,8 +3,8 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const app = express()
-const Ususario = require('../models/usuario');
-const usuario = require('../models/usuario');
+const Usuario = require('../models/usuario');
+
 
 
 
@@ -16,7 +16,7 @@ app.get('/usuario', (req, res) => {
    let limite =req.query.limite || 5; // Si no especifica el numero de registro, llega hasta 5
    limite =Number(limite);
 
-  Ususario.find({state: true}, 'nombre email role state google img') // Filtrando los resultados
+  Usuario.find({state: true}, 'nombre email role state google img') // Filtrando los resultados
      .skip(desde) //Salta a los siguentes registros
      .limit(limite) //Manda solo un numero de registros
      
@@ -29,7 +29,7 @@ app.get('/usuario', (req, res) => {
         })
       }
 
-      usuario.count({state: true}, (err, conteo) => {
+      Usuario.count({state: true}, (err, conteo) => {
 
 
         res.json({
@@ -54,7 +54,7 @@ app.get('/usuario', (req, res) => {
   
       let body = req.body;
 
-      let usuario = new Ususario({ //Crea al usuario
+      let usuario = new Usuario({ //Crea al usuario
         nombre: body.nombre,
         email: body.email,
         password: bcrypt.hashSync( body.password, 10), //hashSync es para que haga el hash de forma sincrona
@@ -89,7 +89,7 @@ app.get('/usuario', (req, res) => {
       let body = _.pick( req.body, ['nombre', 'email', 'img', 'role', 'estado'] ); //Regresa una copia del objeto filtrando solo los valores que yo quiero
 
 
-      Ususario.findByIdAndUpdate( id, body, {new: true, runValidators: true}, (err, usuarioDB) => {
+      Usuario.findByIdAndUpdate( id, body, {new: true, runValidators: true}, (err, usuarioDB) => {
         
         if(err){
           return res.status(400).json({
@@ -115,7 +115,7 @@ app.get('/usuario', (req, res) => {
             state: false
           }
 
-          Ususario.findByIdAndUpdate(id, changeState, {new: true}, (err, userDel) => {
+          Usuario.findByIdAndUpdate(id, changeState, {new: true}, (err, userDel) => {
             
             if(err){
                     return res.status(400).json({

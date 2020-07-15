@@ -15,13 +15,9 @@ app.use(bodyParser.json())
 app.use( require('./routes/usuario') ); //conexion a hacia las rutas 
 
  
-  mongoose.connect('mongodb://localhost:27017/tienda', (err, res) => {
-      
-   if(err) throw err;
-
-   console.log('Base de datos ONLINE');
-
-  });
+  mongoose.connect(process.env.URLDB, {useNewUrlParser: true, useCreateIndex: true})
+            .then(mongoose => console.log('BD en linea'))
+            .catch(err => console.log(err));
 
   app.listen(process.env.PORT, () => {
     console.log(`Escuchando el puerto: ${process.env.PORT}`);
