@@ -12,12 +12,26 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.use( require('./routes/usuario') ); //conexion a hacia las rutas 
+// configuracion global de rutas
+app.use( require('./routes/index') ); //conexion a hacia las rutas 
 
- 
-  mongoose.connect('mongodb://strike:FQX0zt7hNJYJr3IR@cluster0-shard-00-00.5ldh1.mongodb.net:27017,cluster0-shard-00-01.5ldh1.mongodb.net:27017,cluster0-shard-00-02.5ldh1.mongodb.net:27017/test?replicaSet=atlas-sl9qhj-shard-0&ssl=true&authSource=admin', {useNewUrlParser: true, useCreateIndex: true})
-            .then(mongoose => console.log('BD en linea'))
-            .catch(err => console.log(err));
+
+  mongoose.connect(process.env.URLDB,
+                   {useNewUrlParser: true, 
+                    useCreateIndex: true,  
+                    useUnifiedTopology: true, 
+                    useFindAndModify: false 
+                  }, 
+                   (err, res) => {
+
+       if (err) throw err;
+       console.log('BD en linea')
+
+     }); 
+
+  // mongoose.connect(process.env.URLDB, {useNewUrlParser: true, useCreateIndex: true})
+  //           .then(mongoose => console.log('BD en linea'))
+  //           .catch(err => console.log(err));
 
   app.listen(process.env.PORT, () => {
     console.log(`Escuchando el puerto: ${process.env.PORT}`);
@@ -26,4 +40,4 @@ app.use( require('./routes/usuario') ); //conexion a hacia las rutas
 
 // app.listen(3000, () => {
 //     console.log('Hola server');
-// });
+// }); 

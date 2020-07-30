@@ -41,6 +41,7 @@ let usuarioSchema = new Schema({
     }
 });
 
+// excluye la contraseña del token
 usuarioSchema.methods.toJSON = function() { // se usa 'function' y no '=>', por que se utiliza el this
     let user = this; //lo que sea que tenga en ese momento
     let userObject = user.toObject(); //toma el objeto del usuario
