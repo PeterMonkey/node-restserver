@@ -30,7 +30,7 @@ let urlDB;
 // if(process.env.NODE_ENV === 'dev'){
     urlDB = 'mongodb://localhost:27017/tienda'
 // } else {
-//    urlDB =  'mongodb://strike:FQX0zt7hNJYJr3IR@cluster0-shard-00-00.5ldh1.mongodb.net:27017,cluster0-shard-00-01.5ldh1.mongodb.net:27017,cluster0-shard-00-02.5ldh1.mongodb.net:27017/test?replicaSet=atlas-sl9qhj-shard-0&ssl=true&authSource=admin'
+//    urlDB =  process.env.MONGO_URI
 // }
 
 process.env.URLDB = urlDB;
