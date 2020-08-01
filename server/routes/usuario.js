@@ -3,12 +3,13 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const Usuario = require('../models/usuario');
+const { verificaToken, verificaAdmin_Role } = require('../middlewares/autentication')
 
 const app = express()
 
 
-app.get('/usuario', (req, res) => {
-    
+app.get('/usuario', verificaToken ,(req, res) => {
+
    let desde = req.query.desde || 0; // Si no especifica desde donde comienza, lo haces desde 0
    desde = Number(desde); 
 
@@ -49,7 +50,7 @@ app.get('/usuario', (req, res) => {
   })
   
   //El post se usa para crear nuevos registros
-  app.post('/usuario', (req, res) => {
+  app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
   
       let body = req.body;
 
@@ -82,7 +83,7 @@ app.get('/usuario', (req, res) => {
     })
   
     //El put se utiliza para actualizar registros
-  app.put('/usuario/:id', (req, res) => {
+  app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
   
       let id = req.params.id; //Retorne lo que sea que coloque en el url
       let body = _.pick( req.body, ['nombre', 'email', 'img', 'role', 'estado'] ); //Regresa una copia del objeto filtrando solo los valores que yo quiero
@@ -107,7 +108,7 @@ app.get('/usuario', (req, res) => {
       
   })
   
-  app.delete('/usuario/:id', (req, res) => {
+  app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
 
           let id = req.params.id;
           let changeState = {
