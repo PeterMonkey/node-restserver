@@ -47,7 +47,7 @@ app.get('/usuario', verificaToken ,(req, res) => {
      });
 
 
-  })
+  }) 
   
   //El post se usa para crear nuevos registros
   app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
